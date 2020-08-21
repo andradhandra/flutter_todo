@@ -31,6 +31,7 @@ class AddTaskScreen extends StatelessWidget {
               ),
             ),
             TextField(
+              controller: textController,
               decoration: InputDecoration(
                 enabledBorder: UnderlineInputBorder(
                   borderSide: BorderSide(

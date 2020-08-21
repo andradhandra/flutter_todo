@@ -2,18 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter_todo/models/TaskModel.dart';
 import 'package:flutter_todo/screens/AddTaskScreen.dart';
 import 'package:flutter_todo/widgets/TaskList.dart';
+import 'package:flutter_todo/widgets/TaskTile.dart';
 
-class TasksScreen extends StatelessWidget {
+class TasksScreen extends StatefulWidget {
+  @override
+  _TasksScreenState createState() => _TasksScreenState();
+}
+
+class _TasksScreenState extends State<TasksScreen> {
   final _addTaskInputFieldController = TextEditingController();
+
   final List<TaskModel> _tasks = [
     TaskModel(name: "Beli susu"),
     TaskModel(name: "Beli madu"),
     TaskModel(name: "Beli racun")
   ];
 
+  void _addTask () {
+    String newTask = _addTaskInputFieldController.text;
+    setState(() {
+      _tasks.add(TaskModel(name: newTask));
+      _addTaskInputFieldController.clear();
+    });
+    Navigator.pop(context);
+  }
+
   @override
   Widget build(BuildContext context) {
-    // void _addTask () {}
     return Scaffold(
       backgroundColor: Colors.lightBlueAccent,
       body: SafeArea(
@@ -61,7 +76,16 @@ class TasksScreen extends StatelessWidget {
                     top: Radius.circular(20)
                   )
                 ),
-                child: TaskList(tasks: _tasks),
+                child: TaskList(
+                  tasks: _tasks,
+                  builder: (context, i) => 
+                    TaskTile(
+                      task: _tasks[i],
+                      onChanged: (_) => setState(
+                        _tasks[i].toggleDone
+                      ),  
+                    ),
+                ),
               ),
             )
           ],
@@ -78,7 +102,7 @@ class TasksScreen extends StatelessWidget {
           isScrollControlled: true,
           builder: (context) => AddTaskScreen(
             textController: _addTaskInputFieldController,
-            onButtonPressed: null,
+            onButtonPressed: _addTask,
           )
         ),
         backgroundColor: Colors.lightBlueAccent,
